@@ -1,4 +1,4 @@
-var svgWidth = 660;
+var svgWidth = 760;
 var svgHeight = 500;
 
 var margin = {
@@ -14,7 +14,7 @@ var height = svgHeight - margin.top - margin.bottom;
 // Create an SVG wrapper, append an SVG group that will hold our chart,
 // and shift the latter by left and top margins.
 var svg = d3
-  .select("#scatte")
+  .select("#scatter")
   .append("svg")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
@@ -76,7 +76,7 @@ function updateToolTip(chosenXAxis, Circles) {
     label = "household Income (median):";
   }
   var toolTip = d3.tip()
-    .attr("class", "tooltip")
+    .attr("class", "d3-tip")
     .offset([80, -60])
     .html(function(d) {
       return (`${d.state}<br>${label} ${d[chosenXAxis]}`);
@@ -114,7 +114,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
 
   // Create y scale function
   var yLinearScale = d3.scaleLinear()
-    .domain([0, d3.max(stateData, d => d.healthcare)])
+    .domain([0, d3.max(stateData, d => d.healthcare)*0.9])
     .range([height, 0]);
 
   // Create initial axis functions
@@ -142,7 +142,9 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
 //     .attr("fill", "pink")
 //     .attr("opacity", ".5");
 
-    var Circles = svg.selectAll("g", "Circles-group").data(stateData).enter();
+    var Circles = svg.selectAll("g", "Circles-group")
+      .data(stateData)
+      .enter();
     Circles
     .append("circle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
@@ -167,21 +169,21 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
 
   var povertyLabel = labelsGroup.append("text")
     .attr("x", 0)
-    .attr("y", 40)
+    .attr("y", 15)
     .attr("value", "poverty") // value to grab for event listener
     .classed("active", true)
     .text("In Poverty % ");
 
   var ageLabel = labelsGroup.append("text")
     .attr("x", 0)
-    .attr("y", 45)
+    .attr("y", 38)
     .attr("value", "age") // value to grab for event listener
     .classed("inactive", true)
     .text("Age (median):");
 
     var incomeLabel = labelsGroup.append("text")
     .attr("x", 0)
-    .attr("y", 50)
+    .attr("y", 55)
     .attr("value", "income") // value to grab for event listener
     .classed("inactive", true)
     .text("HouseholdIncome (median):");

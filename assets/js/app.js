@@ -60,8 +60,8 @@ d3.csv("assets/data/data.csv").then(function(stateData) {
     // // Step 5:append circles and text under the class g circles-group, render the value 
     // // ==============================
         
-    var Circles = svg.selectAll("g", "Circles-group").data(stateData).enter();
-    Circles
+    var theCircles = svg.selectAll("g", "Circles-group").data(stateData).enter();
+    theCircles
     .append("circle")
     .attr("cx", d => xLinearScale(d.poverty))
     .attr("cy", d => yLinearScale(d.healthcare))
@@ -70,7 +70,7 @@ d3.csv("assets/data/data.csv").then(function(stateData) {
     .attr("opacity", ".75");
 
     
-    Circles
+    theCircles
     .append("text")
     .text(d => d.abbr)
     .attr('font-size',8)
