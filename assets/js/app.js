@@ -60,8 +60,8 @@ d3.csv("assets/data/data.csv").then(function(stateData) {
     // // Step 5:append circles and text under the class g circles-group, render the value 
     // // ==============================
         
-    var theCircles = svg.selectAll("g", "Circles-group").data(stateData).enter();
-    theCircles
+    var Circles = svg.selectAll("g", "Circles-group").data(stateData).enter();
+    Circles
     .append("circle")
     .attr("cx", d => xLinearScale(d.poverty))
     .attr("cy", d => yLinearScale(d.healthcare))
@@ -70,7 +70,7 @@ d3.csv("assets/data/data.csv").then(function(stateData) {
     .attr("opacity", ".75");
 
     
-    theCircles
+    Circles
     .append("text")
     .text(d => d.abbr)
     .attr('font-size',8)
@@ -82,7 +82,7 @@ d3.csv("assets/data/data.csv").then(function(stateData) {
     // // Step 6: Initialize tool tip
     // // ==============================
     // var toolTip = d3.tip()
-    //   .attr("class", "tooltip")
+    //   .attr("class", "d3-tip ")
     //   .offset([80, -60])
     //   .html(function(d) {
     //     return (`${d.state}<br>Poverty %: ${d.poverty}<br>Healthcare %: ${d.healthcare}`);
@@ -90,16 +90,16 @@ d3.csv("assets/data/data.csv").then(function(stateData) {
 
     // // Step 7: Create tooltip in the chart
     // // ==============================
-    // chartGroup.call(toolTip);
+    // theCircles.call(toolTip);
 
     // // Step 8: Create event listeners to display and hide the tooltip
     // // ==============================
-    // circlesGroup.on("click", function(stateData) {
-    //   toolTip.show(stateData, this);
+    // theCircles.on("click", function(data) {
+    //   toolTip.show(data, this);
     // })
     //   // onmouseout event
-    //   .on("mouseout", function(stateData) {
-    //     toolTip.hide(stateData);
+    //   .on("mouseout", function(data) {
+    //     toolTip.hide(data);
     //   });
 
     // Create axes labels
