@@ -100,47 +100,10 @@ function renderText(texts, newXScale, chosenXAxis,newYScale, chosenYAxis) {
   return texts;
 }
 
-//function to swich x-axis values for tooltips
-function switchX(value, chosenXAxis) {
-
-  //stylize based on variable chosen
-  //poverty percentage
-  if (chosenXAxis === 'poverty') {
-      return `${value}`;
-  }
-  //household income in dollars
-  else if (chosenXAxis === 'age') {
-      return `${value}`;
-  }
-  //age (number)
-  else {
-      return `${value}`;
-  }
-}
-
-
-//function to swich x-axis values for tooltips
-function switchY(value, chosenYAxis) {
-
-  //stylize based on variable chosen
-  //poverty percentage
-  if (chosenYAxis === 'healthcare') {
-      return `${value}`;
-  }
-  //household income in dollars
-  else if (chosenYAxis === 'obesity') {
-      return `${value}`;
-  }
-  //age (number)
-  else {
-      return `${value}`;
-  }
-}
-
 
 
 // function used for updating circles group with new tooltip
-function updateToolTip(chosenXAxis,chosenYAxis, Circles) {
+function updateToolTip(chosenXAxis, chosenYAxis, Circles) {
 
   // set X labels
   var xlabel;
@@ -175,7 +138,8 @@ function updateToolTip(chosenXAxis,chosenYAxis, Circles) {
     .attr("class", "d3-tip")
     .offset([-10, 2])
     .html(function(d) {
-      return (`${d.state}<br>${xlabel} ${switchX(d[chosenXAxis])}<br>${yLabel} ${d[chosenYAxis]}`);
+     
+      return (`${d.state}<br>${xlabel} ${[chosenXAxis])}<br>${yLabel}${d[chosenYAxis]}`);
     });
 
     Circles.call(toolTip);
@@ -187,8 +151,9 @@ function updateToolTip(chosenXAxis,chosenYAxis, Circles) {
     .on("mouseout", function(data) {
       toolTip.hide(data);
     });
-
-  return Circles;
+    
+   
+  return Circles
 }
 
 // Retrieve data from the CSV file and execute everything below
