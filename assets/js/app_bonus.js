@@ -139,7 +139,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, Circles) {
     .offset([-10, 2])
     .html(function(d) {
      
-      return (`${d.state}<br>${xlabel} ${[chosenXAxis])}<br>${yLabel}${d[chosenYAxis]}`);
+      return (`${d.state}<br>${xlabel} ${d[chosenXAxis]}<br>${yLabel}${d[chosenYAxis]}`);
     });
 
     Circles.call(toolTip);
