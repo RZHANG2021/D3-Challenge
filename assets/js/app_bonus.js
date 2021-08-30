@@ -15,9 +15,10 @@ var height = svgHeight - margin.top - margin.bottom;
 // and shift the latter by left and top margins.
 var svg = d3.select("#scatter")
   .append("svg")
+  .classed("chart", true)
   .attr("width", svgWidth)
   .attr("height", svgHeight)
-  .attr("class", "chart");
+  // .attr("class", "chart");
 // Append an SVG group
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
@@ -105,17 +106,39 @@ function switchX(value, chosenXAxis) {
   //stylize based on variable chosen
   //poverty percentage
   if (chosenXAxis === 'poverty') {
-      return `${value}%`;
+      return `${value}`;
   }
   //household income in dollars
   else if (chosenXAxis === 'age') {
-      return `$${value}`;
+      return `${value}`;
   }
   //age (number)
   else {
       return `${value}`;
   }
 }
+
+
+//function to swich x-axis values for tooltips
+function switchY(value, chosenYAxis) {
+
+  //stylize based on variable chosen
+  //poverty percentage
+  if (chosenYAxis === 'healthcare') {
+      return `${value}`;
+  }
+  //household income in dollars
+  else if (chosenYAxis === 'obesity') {
+      return `${value}`;
+  }
+  //age (number)
+  else {
+      return `${value}`;
+  }
+}
+
+
+
 // function used for updating circles group with new tooltip
 function updateToolTip(chosenXAxis,chosenYAxis, Circles) {
 
@@ -133,7 +156,7 @@ function updateToolTip(chosenXAxis,chosenYAxis, Circles) {
   }
 
   // set Y labels
-  var ylabel;
+  var ylabel ;
   if (chosenYAxis === 'healthcare') {
     ylabel = "No Healthcare %:"
   }
@@ -150,9 +173,9 @@ function updateToolTip(chosenXAxis,chosenYAxis, Circles) {
   //create tooltip
   var toolTip = d3.tip()
     .attr("class", "d3-tip")
-    .offset([-10, 0])
+    .offset([-10, 2])
     .html(function(d) {
-      return (`${d.state}<br>${xlabel} ${switchX(d[chosenXAxis],chosenXAxis)}<br>${yLabel} ${d[chosenYAxis]}`);
+      return (`${d.state}<br>${xlabel} ${switchX(d[chosenXAxis])}<br>${yLabel} ${d[chosenYAxis]}`);
     });
 
     Circles.call(toolTip);
@@ -264,32 +287,32 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
   var healthcareLabel = ylabelsGroup.append("text")
       .attr("x", 0)
       .attr("y", -15)
-      .attr("value", "poverty") // value to grab for event listener
+      .attr("value", "healthcare") // value to grab for event listener
       .classed("aText", true)
       .classed("active", true)
       .attr("dy", "1em")
       .attr("transform", "rotate(-90)")
       .text("Lacks Healthcare % ");
 
-  var smokesLabel = ylabelsGroup.append("text")
+  var obesityLabel = ylabelsGroup.append("text")
       .attr("x", 0)
       .attr("y", -35)
-      .attr("value", "poverty") // value to grab for event listener
-      .classed("aText", true)
-      .classed("inactive", true)
-      .attr("dy", "1em")
-      .attr("transform", "rotate(-90)")
-      .text("Smokes % ");
-
-    var obesityLabel = ylabelsGroup.append("text")
-      .attr("x", 0)
-      .attr("y", -60)
-      .attr("value", "poverty") // value to grab for event listener
+      .attr("value", "obesity") // value to grab for event listener
       .classed("aText", true)
       .classed("inactive", true)
       .attr("dy", "1em")
       .attr("transform", "rotate(-90)")
       .text("Obesity % ");
+
+    var smokesLabel = ylabelsGroup.append("text")
+      .attr("x", 0)
+      .attr("y", -60)
+      .attr("value", "smokes") // value to grab for event listener
+      .classed("aText", true)
+      .classed("inactive", true)
+      .attr("dy", "1em")
+      .attr("transform", "rotate(-90)")
+      .text("Smokers % ");
 
   // updateToolTip function above csv import
   var Circles = updateToolTip(chosenXAxis,chosenYAxis, Circles);
