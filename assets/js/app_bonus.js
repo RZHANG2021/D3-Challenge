@@ -53,7 +53,7 @@ function yScale(stateData, chosenYAxis) {
 }
 
 // function used for updating xAxis var upon click on axis label
-function renderAxes(newXScale, xAxis) {
+function renderXAxes(newXScale, xAxis) {
   var bottomAxis = d3.axisBottom(newXScale);
 
   xAxis.transition()
@@ -63,24 +63,37 @@ function renderAxes(newXScale, xAxis) {
   return xAxis;
 }
 
+// function used for updating yAxis var upon click on axis label
+function renderYAxes(newYScale, yAxis) {
+  var leftAxis = d3.axisLeft(newYScale);
+
+  yAxis.transition()
+    .duration(1000)
+    .call(leftAxis);
+
+  return yAxis;
+}
+
 // function used for updating circles group with a transition to
 // new circles
-function renderCircles(Circles, newXScale, chosenXAxis) {
+function renderCircles(Circles, newXScale, chosenXAxis,newYScale, chosenYAxis) {
 
     Circles.transition()
     .duration(1000)
-    .attr("cx", d => newXScale(d[chosenXAxis]));
+    .attr("cx", d => newXScale(d[chosenXAxis]))
+    .attr("cy", d => newYScale(data[chosenYAxis]));
 
   return Circles;
 }
 
 
 //function used for updating state labels with a transition to new 
-function renderText(texts, newXScale, chosenXAxis) {
+function renderText(texts, newXScale, chosenXAxis,newYScale, chosenYAxis) {
 
   texts.transition()
       .duration(1000)
-      .attr("x", d => newXScale(d[chosenXAxis]));
+      .attr("x", d => newXScale(d[chosenXAxis]))
+      .attr("y", d => newXScale(d[chosenYAxis]));
       
 
   return texts;
@@ -104,8 +117,9 @@ function switchX(value, chosenXAxis) {
   }
 }
 // function used for updating circles group with new tooltip
-function updateToolTip(chosenXAxis, Circles) {
+function updateToolTip(chosenXAxis,chosenYAxis, Circles) {
 
+  // set X labels
   var xlabel;
 
   if (chosenXAxis === "poverty") {
@@ -117,11 +131,28 @@ function updateToolTip(chosenXAxis, Circles) {
   else {
     xlabel = "household Income (median):";
   }
+
+  // set Y labels
+  var ylabel;
+  if (chosenYAxis === 'healthcare') {
+    yLabel = "No Healthcare %:"
+  }
+  //percentage obese
+  else if (chosenYAxis === 'obesity') {
+    yLabel = "Obesity %:"
+  }
+  //smoking percentage
+  else {
+    yLabel = "Smokers:"
+  }
+
+
+  //create tooltip
   var toolTip = d3.tip()
     .attr("class", "d3-tip")
     .offset([-10, 0])
     .html(function(d) {
-      return (`${d.state}<br>${xlabel} ${switchX(d[chosenXAxis])}`);
+      return (`${d.state}<br>${xlabel} ${switchX(d[chosenXAxis],chosenXAxis)}<br>${yLabel} ${d[chosenYAxis]}`);
     });
 
     Circles.call(toolTip);
@@ -140,7 +171,6 @@ function updateToolTip(chosenXAxis, Circles) {
 // Retrieve data from the CSV file and execute everything below
 d3.csv("assets/data/data.csv").then(function(stateData, err) {
   
-  console.log(stateData);
   if (err) throw err;
 
   // parse data
@@ -153,14 +183,11 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
     data.smokes = +data.smokes;
   });
 
-  // xLinearScale function above csv import
+  // LinearScale function above csv import
   var xLinearScale = xScale(stateData, chosenXAxis);
+  var yLinearScale = yScale(stateData, chosenYAxis);
 
-  // Create y scale function
-  var yLinearScale = d3.scaleLinear()
-    .domain([0, d3.max(stateData, d => d.healthcare)*0.9])
-    .range([height, 0]);
-
+  
   // Create initial axis functions
   var bottomAxis = d3.axisBottom(xLinearScale);
   var leftAxis = d3.axisLeft(yLinearScale);
