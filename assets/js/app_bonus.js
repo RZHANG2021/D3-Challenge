@@ -13,8 +13,7 @@ var height = svgHeight - margin.top - margin.bottom;
 
 // Create an SVG wrapper, append an SVG group that will hold our chart,
 // and shift the latter by left and top margins.
-var svg = d3
-  .select("#scatter")
+var svg = d3.select("#scatter")
   .append("svg")
   .attr("width", svgWidth)
   .attr("height", svgHeight)
@@ -25,6 +24,7 @@ var chartGroup = svg.append("g")
 
 // Initial Params
 var chosenXAxis = "poverty";
+var chosenYAxis = "healthcare";
 
 // function used for updating x-scale var upon click on axis label
 function xScale(stateData, chosenXAxis) {
@@ -36,6 +36,19 @@ function xScale(stateData, chosenXAxis) {
     .range([0, width]);
 
   return xLinearScale;
+
+}
+
+// function used for updating x-scale var upon click on axis label
+function yScale(stateData, chosenYAxis) {
+  // create scales
+  var yLinearScale = d3.scaleLinear()
+    .domain([d3.min(stateData, d => d[chosenYAxis]) * 0.9,
+      d3.max(stateData, d => d[chosenYAxis]) * 1.1
+    ])
+    .range([height, 0]);
+
+  return yLinearScale;
 
 }
 
